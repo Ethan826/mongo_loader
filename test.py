@@ -1,7 +1,7 @@
 from pathlib import PosixPath
 from pymongo import MongoClient
 from unittest import TestCase
-import io, json, os
+import os
 from json_handler import JsonHandler
 
 
@@ -23,15 +23,26 @@ class TestJSON(TestCase):
         self.assertNotIn('fakefile.txt', self.j.jsons)
 
     def test_can_parse_json(self):
-        self.assertEqual(self.j.parse_one_json(self.j.jsons[0]), {"a": 1, "b": 2})
+        self.assertEqual(
+            self.j.parse_one_json(self.j.jsons[0]),
+            {"a": 1, "b": 2}
+        )
 
-    def test_can_put_files_in_database(self):
-        self.assertEqual(self.coll.count(), 0)
-        self.j.put_jsons_in_database(self.j.jsons, self.j.db_name, self.j.coll_name)
+        def test_can_put_files_in_database(self):
+            self.assertEqual(self.coll.count(), 0)
+        self.j.put_jsons_in_database(
+            self.j.jsons,
+            self.j.db_name,
+            self.j.coll_name
+        )
         self.assertEqual(self.coll.count(), 2)
 
     def test_inserted_docs_can_be_retrieved(self):
-        self.j.put_jsons_in_database(self.j.jsons, self.j.db_name, self.j.coll_name)
+        self.j.put_jsons_in_database(
+            self.j.jsons,
+            self.j.db_name,
+            self.j.coll_name
+        )
         self.assertEqual(self.coll.find({"a": 1}).count(), 2)
 
     def tearDown(self):

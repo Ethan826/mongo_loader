@@ -1,5 +1,7 @@
-import json, re, pymongo, sys
-from pathlib import Path, PosixPath
+import json
+import re
+import sys
+from pathlib import Path
 from pymongo import MongoClient
 
 
@@ -13,8 +15,9 @@ class JsonHandler:
 
     def get_jsons(self):
         my_files = Path(self.path)
-        return [f for f in my_files.iterdir() if re.search(r'\.json$', f.suffix, re.I)]
-    
+        return [f for f in my_files.iterdir()
+                if re.search(r'\.json$', f.suffix, re.I)]
+
     @staticmethod
     def parse_one_json(json_file):
         with json_file.open() as f:
@@ -38,4 +41,5 @@ if __name__ == '__main__':
         j = JsonHandler(sys.argv[1], sys.argv[2], sys.argv[3])
         j.put_jsons_in_database(j.jsons, j.db_name, j.coll_name)
     else:
-        raise TypeError("Expected 3 command line arguments, received {}.".format(len(sys.argv) - 1))
+        raise TypeError("Expected 3 command line arguments, "
+                        "received {}.".format(len(sys.argv) - 1))
